@@ -1,3 +1,4 @@
 <id>30245085</id>
 <name>弟みたいな存在</name>
-<author>横山克</author>
+<artist>横山克</artist>
+<cover>https://p1.music.126.net/GSciAiBHt0OplBApxsUC-A==/7742760882881891.jpg</cover>
