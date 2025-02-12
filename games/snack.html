@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>贪吃蛇</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #2c3e50;
+            color: white;
+        }
+        #gameCanvas {
+            border: 2px solid white;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #27ae60;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>贪吃蛇</h1>
+    <p>得分：<span id="score">0</span></p>
+    <div class="controls">
+        <p>游戏面板尺寸：</p>
+        <select id="sizeSelect">
+            <option value="400">小</option>
+            <option value="500" selected>中</option>
+            <option value="600">大</option>
+        </select>
+    </div>
+    <button id="startBtn">开始游戏</button>
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreElement = document.getElementById('score');
+const sizeSelect = document.getElementById('sizeSelect');
+const startBtn = document.getElementById('startBtn');
+
+const GAME_SPEED = 150;
+let snake = [];
+let food = {};
+let dx = 1;
+let dy = 0;
+let score = 0;
+let gameLoop;
+let isPlaying = false;
+
+function initGame() {
+    // 根据选择设置画布尺寸
+    const size = parseInt(sizeSelect.value);
+    canvas.width = size;
+    canvas.height = size;
+    
+    // 初始化蛇
+    snake = [{x: 5, y: 5}];
+    // 生成食物
+    generateFood();
+    // 重置移动方向
+    dx = 1;
+    dy = 0;
+    // 重置得分
+    score = 0;
+    scoreElement.textContent = score;
+}
+
+function generateFood() {
+    const size = parseInt(sizeSelect.value);
+    const gridSize = size / 20;
+    food = {
+        x: Math.floor(Math.random() * (size / gridSize - 2)) + 1,
+        y: Math.floor(Math.random() * (size / gridSize - 2)) + 1
+    };
+}
+
+function startGame() {
+    if (isPlaying) {
+        clearInterval(gameLoop);
+    }
+    initGame();
+    isPlaying = true;
+    startBtn.textContent = "重新开始";
+    sizeSelect.disabled = true;
+    gameLoop = setInterval(update, GAME_SPEED);
+}
+
+function gameOver() {
+    clearInterval(gameLoop);
+    isPlaying = false;
+    startBtn.textContent = "开始游戏";
+    sizeSelect.disabled = false;
+    alert("游戏结束！得分：" + score);
+}
+
+function update() {
+    const size = parseInt(sizeSelect.value);
+    const gridSize = size / 20;
+    
+    // 移动蛇头
+    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+    
+    // 碰撞检测
+    if (head.x < 0 || head.x >= size/gridSize || 
+        head.y < 0 || head.y >= size/gridSize ||
+        snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        gameOver();
+        return;
+    }
+    
+    // 添加新头部
+    snake.unshift(head);
+    
+    // 吃食物检测
+    if (head.x === food.x && head.y === food.y) {
+        score += 1;
+        scoreElement.textContent = score;
+        generateFood();
+    } else {
+        snake.pop();
+    }
+    
+    // 清空画布
+    ctx.fillStyle = '#2c3e50';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // 绘制食物
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize-2, gridSize-2);
+    
+    // 绘制蛇
+    ctx.fillStyle = '#66ccff';
+    snake.forEach((segment, index) => {
+        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize-2, gridSize-2);
+    });
+}
+
+// 事件监听
+startBtn.addEventListener('click', startGame);
+
+sizeSelect.addEventListener('change', () => {
+    if (!isPlaying) {
+        initGame();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'ArrowUp': if (dy !== 1) { dx = 0; dy = -1; } break;
+        case 'ArrowDown': if (dy !== -1) { dx = 0; dy = 1; } break;
+        case 'ArrowLeft': if (dx !== 1) { dx = -1; dy = 0; } break;
+        case 'ArrowRight': if (dx !== -1) { dx = 1; dy = 0; } break;
+    }
+});
+
+// 初始设置
+initGame();
+</script>
+</body>
+</html>
