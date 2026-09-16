@@ -1,16 +1,263 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>Games list</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>小游戏列表</title>
+
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f13" media="(prefers-color-scheme: dark)">
+
+<style>
+  /* ============ 设计变量：浅色（默认） ============ */
+  :root {
+    color-scheme: light dark;
+
+    --bg: #f4f5f7;
+    --glow: radial-gradient(900px 520px at 50% -18%, rgba(59, 110, 245, .16), transparent 70%);
+
+    --surface: #ffffff;
+    --surface-2: #eff1f6;
+
+    --text: #14161a;
+    --text-muted: #626a78;
+
+    --border: #e4e7ed;
+    --border-strong: #ccd3e0;
+
+    --accent: #2f6bf3;
+
+    --shadow: 0 1px 2px rgba(18, 24, 40, .05), 0 6px 16px rgba(18, 24, 40, .05);
+    --shadow-hover: 0 2px 6px rgba(18, 24, 40, .07), 0 14px 32px rgba(18, 24, 40, .10);
+  }
+
+  /* ============ 深色：跟随系统 ============ */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d0f13;
+      --glow: radial-gradient(900px 520px at 50% -18%, rgba(88, 132, 255, .18), transparent 70%);
+
+      --surface: #171a21;
+      --surface-2: #21252e;
+
+      --text: #eef1f6;
+      --text-muted: #9aa3b2;
+
+      --border: #262b35;
+      --border-strong: #3a414f;
+
+      --accent: #7aa2ff;
+
+      --shadow: 0 1px 2px rgba(0, 0, 0, .40), 0 8px 20px rgba(0, 0, 0, .35);
+      --shadow-hover: 0 2px 6px rgba(0, 0, 0, .45), 0 16px 36px rgba(0, 0, 0, .50);
+    }
+  }
+
+  /* ============ 基础 ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    background-color: var(--bg);
+    background-image: var(--glow);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text);
+    transition: background-color .3s ease, color .3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ============ 布局 ============ */
+  .page {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: clamp(22px, 5vw, 52px) clamp(16px, 4vw, 28px) 40px;
+  }
+
+  .site-header {
+    margin-bottom: clamp(20px, 4vw, 34px);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 5.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    margin: 6px 0 0;
+    font-size: .9rem;
+    color: var(--text-muted);
+  }
+
+  /* ============ 游戏卡片网格 ============ */
+  .game-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .game-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 78px;
+    padding: 16px;
+    color: inherit;
+    text-decoration: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transition: transform .18s ease, box-shadow .18s ease,
+                border-color .18s ease, background-color .3s ease;
+  }
+
+  .game-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .game-card:active { transform: scale(.985); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .game-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-hover);
+    }
+    .game-card:hover .game-arrow {
+      opacity: 1;
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+    .game-card:hover .game-icon { transform: scale(1.06); }
+  }
+
+  .game-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+    background: var(--surface-2);
+    border-radius: 13px;
+    transition: transform .18s ease, background-color .3s ease;
+  }
+
+  .game-body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .game-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    overflow-wrap: break-word;
+  }
+
+  .game-arrow {
+    flex: none;
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    opacity: .55;
+    transition: transform .18s ease, opacity .18s ease, color .18s ease;
+  }
+
+  /* ============ 页脚 ============ */
+  .site-footer {
+    margin-top: clamp(28px, 6vw, 52px);
+    font-size: .78rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  /* ============ 入场动画 ============ */
+  @media (prefers-reduced-motion: no-preference) {
+    .game-card {
+      animation: rise .45s cubic-bezier(.2, .7, .3, 1) backwards;
+    }
+    .game-grid li:nth-child(1) .game-card { animation-delay: .03s; }
+    .game-grid li:nth-child(2) .game-card { animation-delay: .09s; }
+    .game-grid li:nth-child(3) .game-card { animation-delay: .15s; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* 小屏微调 */
+  @media (max-width: 380px) {
+    .game-icon { width: 42px; height: 42px; font-size: 20px; }
+    .game-card { gap: 12px; padding: 14px; }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>小游戏列表</h1>
+
+  <div class="page">
+    <header class="site-header">
+      <h1>小游戏列表</h1>
     </header>
+
     <main>
-        <button onclick="location.href='https://birdjiujiuuu.github.io/games/EatCXK/'">吃掉蔡徐坤</button>
-        <button onclick="location.href='https://birdjiujiuuu.github.io/games/snake1/'">贪吃蛇</button>
-        <button onclick="location.href='https://birdjiujiuuu.github.io/games/snake2/'">贪吃蛇（新版）</button>
+      <ul class="game-grid">
+        <li>
+          <a class="game-card"
+             href="https://birdjiujiuuu.github.io/games/EatCXK/"
+             aria-label="吃掉蔡徐坤">
+            <span class="game-icon" aria-hidden="true">🍽️</span>
+            <span class="game-body">
+              <span class="game-title">吃掉蔡徐坤</span>
+            </span>
+            <span class="game-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="game-card"
+             href="https://birdjiujiuuu.github.io/games/snake1/"
+             aria-label="贪吃蛇（旧版）">
+            <span class="game-icon" aria-hidden="true">🐍</span>
+            <span class="game-body">
+              <span class="game-title">贪吃蛇（旧版）</span>
+            </span>
+            <span class="game-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="game-card"
+             href="https://birdjiujiuuu.github.io/games/snake2/"
+             aria-label="贪吃蛇（新版）">
+            <span class="game-icon" aria-hidden="true">✨</span>
+            <span class="game-body">
+              <span class="game-title">贪吃蛇（新版）</span>
+            </span>
+            <span class="game-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
     </main>
+  </div>
 </body>
 </html>
