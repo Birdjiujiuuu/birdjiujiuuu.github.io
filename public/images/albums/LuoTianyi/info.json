@@ -1,0 +1,10 @@
+{
+  "title": "天依美图",
+  "description": "一个用来收藏天依美图的相册",
+  "date": "2026-10-27",
+  "location": "本地档案",
+  "tags": ["本地", "洛天依"],
+  "layout": "masonry",
+  "columns": 3,
+  "hidden": false
+}

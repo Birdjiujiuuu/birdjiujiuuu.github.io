@@ -47,6 +47,12 @@ export const gamesConfig: GamesConfig = withUserConfig("games", {
 			icon: "material-symbols:extension-outline-rounded",
 			description: "Cozy, casual & party games",
 		},
+		{
+			key: "music",
+			label: "Music",
+			icon: "material-symbols:genres-outline-rounded",
+			description: "Music & rhythm games",
+		},
 	],
 	// disabledIds: [],
 });

@@ -8,7 +8,7 @@ import { withUserConfig } from "@/utils/config-overlay.ts";
 export const profileConfig: ProfileConfig = withUserConfig("profile", {
 	avatar: "/assets/images/my-avatar.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "Birdjiujiuuu",
-	bio: "一个喜欢术力口的大学生喵~",
+	bio: "华风夏韵，洛水天依",
 	links: [
 		{
 			name: "X",
@@ -16,6 +16,11 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 			// You will need to install the corresponding icon set if it's not already included
 			// `pnpm add @iconify-json/<icon-set-name>`
 			url: "https://x.com/birdjiujiuuu",
+		},
+		{
+			name: "Discord",
+			icon: "fa6-brands:discord",
+			url: "https://discord.gg/F69ukFTY",
 		},
 		{
 			name: "Bilibili",

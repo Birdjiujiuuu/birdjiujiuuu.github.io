@@ -9,7 +9,7 @@ export const announcementConfig: AnnouncementConfig = withUserConfig(
 	"announcement",
 	{
 		title: "", // 公告标题，填空使用 i18n 字符串 Key.announcement
-		content: "Birdjiujiuuu の 小窝上线了喵~", // 公告内容
+		content: "Birdjiujiuuu の 小窝上线了喵，欢迎收藏喵~", // 公告内容
 		closable: false, // 允许用户关闭公告
 		link: {
 			enable: false, // 启用链接
