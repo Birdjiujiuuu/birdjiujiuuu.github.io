@@ -21,12 +21,4 @@ export const musicTracks: readonly TrackDescriptor[] = [
 		source: "/assets/music/url/dazbee.mp3",
 		duration: 241,
 	},
-	{
-		id: "hitori",
-		title: "ひとり上手",
-		artist: "Kaya",
-		cover: "assets/images/music/hitori.webp",
-		source: "/assets/music/url/hitori.mp3",
-		duration: 253,
-	},
 ];
