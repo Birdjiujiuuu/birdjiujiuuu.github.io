@@ -29,20 +29,4 @@ export const musicTracks: readonly TrackDescriptor[] = [
 		source: "/assets/music/url/hitori.mp3",
 		duration: 253,
 	},
-	{
-		id: "xryx",
-		title: "眩耀夜行",
-		artist: "スリーズブーケ",
-		cover: "assets/images/music/xryx.webp",
-		source: "/assets/music/url/xryx.mp3",
-		duration: 245,
-	},
-	{
-		id: "cl",
-		title: "春雷の頃",
-		artist: "22/7",
-		cover: "assets/images/music/cl.webp",
-		source: "/assets/music/url/cl.mp3",
-		duration: 242,
-	},
 ];

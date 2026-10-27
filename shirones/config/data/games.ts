@@ -27,7 +27,7 @@ export const gamesData: GameItem[] = [
 		year: "2011",
 		tags: ["Sandbox", "Survival", "Building"],
 		description:
-			"A blocky sandbox where you mine, craft and build across procedurally generated worlds. Survive the night, or just keep building — alone or with friends.",
+			"一个方块风格的沙盒游戏，在这里你可以生存、建造、探索和冒险。在这里，你可以尽情发挥想象力，建造属于你的世界。",
 		link: "https://www.minecraft.net/",
 	},
 ];
