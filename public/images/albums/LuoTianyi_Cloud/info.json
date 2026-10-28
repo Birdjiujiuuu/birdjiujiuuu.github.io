@@ -1,0 +1,41 @@
+{
+  "mode": "external",
+  "title": "天依美图（云端）",
+  "description": "一个用来收藏天依美图的云端相册",
+  "date": "2026-10-28",
+  "location": "云端档案",
+  "tags": ["洛天依", "云端"],
+  "layout": "masonry",
+  "columns": 3,
+  "cover": "/images/albums/LuoTianyi/cover.webp",
+  "hidden": false,
+  "photos": [
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/01.jpg"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/02.png"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/03.jpeg"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/04.jpeg"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/05.jpg"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/06.png"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/07.png"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/08.jpg"
+    },
+    {
+      "src": "https://birdjiujiuuu-img.pages.dev/albums/LuoTianyi/09.png"
+    }
+  ]
+}
