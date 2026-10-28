@@ -45,7 +45,6 @@ export const gamesData: GameItem[] = [
 		tags: ["Music", "Rhythm", "Anime"],
 		description:
 			"一款风靡日本的音乐节奏游戏，feating 初音未来等虚拟歌手。玩家可以在游戏中体验各种音乐挑战，享受丰富的歌曲和舞台表演。",
-		link: "https://pjsekai.sega.jp/",
 	},
 	{
 		id: " musedash",
