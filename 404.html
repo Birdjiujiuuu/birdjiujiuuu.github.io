@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#fff">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你尚未连接</title>
+<style>
+  :root {
+    --edge-black: #101010;
+    --edge-white: #ffffff;
+    --edge-grey-background: #f6f6f6;
+    --edge-light-grey-hover: #f3f3f3;
+    --edge-light-grey-pressed: #f7f7f7;
+    --edge-primary-text-color: var(--edge-black);
+    --edge-secondary-text-color: #6f6f6f;
+    --edge-text-blue-rest: #0061ab;
+    --edge-text-blue-hover: #0070c6;
+    --edge-focus-color: #838383;
+    --edge-focus-outline: 2px solid var(--edge-focus-color);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --edge-black: #ffffff;
+      --edge-white: #1d1d1d;
+      --edge-grey-background: #2d2d2d;
+      --edge-light-grey-hover: #424242;
+      --edge-light-grey-pressed: #3e3e3e;
+      --edge-secondary-text-color: #949494;
+      --edge-text-blue-rest: #63ace5;
+      --edge-text-blue-hover: #429bdf;
+      --edge-focus-color: #888888;
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-size: 125%;
+  }
+
+  body {
+    background: var(--edge-grey-background);
+    color: var(--edge-primary-text-color);
+    font-family: "Segoe UI", Arial, "Microsoft Yahei", sans-serif;
+    font-size: 75%;
+    margin: 0;
+    word-wrap: break-word;
+  }
+
+  a {
+    color: var(--edge-text-blue-rest);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+  a:hover { color: var(--edge-text-blue-hover); }
+  a:focus {
+    outline: none;
+    border-bottom: var(--edge-focus-outline);
+  }
+
+  .interstitial-wrapper {
+    box-sizing: border-box;
+    font-size: 1em;
+    line-height: 1.6em;
+    margin: 14vh auto 0;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .icon {
+    background-repeat: no-repeat;
+    background-size: 100%;
+    display: inline-block;
+    height: 72px;
+    margin: 0 0 40px;
+    width: 72px;
+    -webkit-user-select: none;
+  }
+
+  .icon-disconnected {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDQ4IDIwNDgiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTE2MDAgMTE1MnE5MyAwIDE3NCAzNXQxNDMgOTYgOTYgMTQyIDM1IDE3NXEwIDkzLTM1IDE3NHQtOTYgMTQzLTE0MiA5Ni0xNzUgMzVxLTkzIDAtMTc0LTM1dC0xNDMtOTYtOTYtMTQyLTM1LTE3NXEwLTkzIDM1LTE3NHQ5Ni0xNDMgMTQyLTk2IDE3NS0zNXptLTMyMCA0NDhxMCA2NiAyNSAxMjR0NjggMTAyIDEwMiA2OSAxMjUgMjVxNDcgMCA5Mi0xM3Q4NC00MGwtNDQzLTQ0M3EtMjYgMzktMzkgODR0LTE0IDkyem01ODcgMTc2cTI2LTM5IDM5LTg0dDE0LTkycTAtNjYtMjUtMTI0dC02OS0xMDEtMTAyLTY5LTEyNC0yNnEtNDcgMC05MiAxM3QtODQgNDBsNDQzIDQ0M3ptLTc3NCAxMjVxMjIgMzYgNDggNjl0NTcgNjJxLTQzIDgtODYgMTJ0LTg4IDRxLTE0MSAwLTI3Mi0zNnQtMjQ0LTEwNC0yMDctMTYwLTE2MS0yMDctMTAzLTI0NS0zNy0yNzJxMC0xNDEgMzYtMjcydDEwNC0yNDQgMTYwLTIwNyAyMDctMTYxVDc1MiAzN3QyNzItMzdxMTQxIDAgMjcyIDM2dDI0NCAxMDQgMjA3IDE2MCAxNjEgMjA3IDEwMyAyNDUgMzcgMjcycTAgNDQtNCA4N3QtMTIgODdxLTU0LTU5LTExOC05OGw0LTM4cTItMTkgMi0zOCAwLTEzMC0zOC0yNTZoLTM2MnE4IDYyIDExIDEyM3Q1IDEyNHEtMzMgMy02NSAxMHQtNjQgMTh2LTM5cTAtNjAtNC0xMTh0LTEyLTExOEg2NTdxLTkgNjQtMTMgMTI3dC00IDEyOXEwIDY1IDQgMTI4dDEzIDEyOGg0NDZxLTM3IDU5LTYwIDEyOEg2NzlxOCAzNyAyMyA4OXQzNyAxMDkgNTEgMTEzIDY0IDEwMSA3OCA3MiA5MiAyOHExOCAwIDM1LTV0MzQtMTR6bTczOS0xMjYxcS0zOC04MS05MS0xNTJ0LTEyMC0xMzEtMTQzLTEwNC0xNjItNzVxMzYgNDkgNjQgMTA1dDUxIDExNSA0MCAxMjEgMjkgMTIxaDMzMnptLTgwOC01MTJxLTQ5IDAtOTEgMjd0LTc4IDczLTY1IDEwMS01MSAxMTMtMzcgMTA5LTIzIDg5aDY5MHEtOC0zNy0yMy04OXQtMzctMTA5LTUxLTExMy02NC0xMDEtNzgtNzItOTItMjh6bS0yOTIgNTBxLTg1IDI5LTE2MiA3NFQ0MjcgMzU3IDMwOCA0ODd0LTkyIDE1M2gzMzJxMTItNTkgMjgtMTIwdDM5LTEyMSA1Mi0xMTYgNjUtMTA1em0tNjA0IDg0NnEwIDEzMCAzOCAyNTZoMzYycS04LTY0LTEyLTEyN3QtNC0xMjlxMC02NSA0LTEyOHQxMi0xMjhIMTY2cS0zOCAxMjYtMzggMjU2em04OCAzODRxMzggODEgOTEgMTUydDEyMCAxMzEgMTQzIDEwNCAxNjIgNzVxLTM2LTQ5LTY1LTEwNXQtNTEtMTE1LTM5LTEyMS0yOS0xMjFIMjE2eiIgZmlsbD0iIzEwMTAxMCIvPjwvc3ZnPg==");
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .icon { filter: invert(1); }
+  }
+
+  h1 {
+    color: var(--edge-primary-text-color);
+    font-size: 1.6em;
+    font-weight: bold;
+    line-height: 1.25em;
+    margin: 0 0 22px;
+    word-wrap: break-word;
+  }
+
+  h1 span {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  h2 {
+    color: var(--edge-secondary-text-color);
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 10px 0;
+  }
+
+  #main-message > p {
+    color: var(--edge-primary-text-color);
+    display: inline;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  #suggestions-list p {
+    color: var(--edge-primary-text-color);
+    font-weight: 700;
+    margin-block-end: 0;
+  }
+
+  #suggestions-list ul {
+    color: var(--edge-primary-text-color);
+    list-style: none;
+    margin-top: 0;
+    padding-inline-start: 0;
+  }
+
+  #suggestions-list li {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 12px;
+  }
+
+  #suggestions-list li::before {
+    content: "•";
+    font-size: 14px;
+    padding-right: 1em;
+  }
+
+  .single-suggestion li::before { display: none; }
+
+  @media (max-width: 700px) {
+    .interstitial-wrapper { padding: 0 10%; }
+  }
+
+  @media (max-width: 420px) {
+    .interstitial-wrapper { padding: 0 5%; }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 8px;
+    }
+  }
+
+  @media (max-height: 350px) {
+    h1 { margin: 0 0 15px; }
+    .interstitial-wrapper { margin-top: 5%; }
+  }
+</style>
+</head>
+<body>
+  <div id="main-frame-error" class="interstitial-wrapper">
+    <div id="main-content">
+      <div class="icon icon-disconnected"></div>
+
+      <div id="main-message">
+        <h1><span>你尚未连接</span></h1>
+        <p>都怪你，Web 因你而不同。这让我们都不想帮你重新联机!</p>
+
+        <div id="error-information-popup-container">
+          <div id="error-information-popup">
+            <div id="error-information-popup-box">
+              <div id="error-information-popup-content">
+                <div id="suggestions-list">
+                  <p>请尝试以下并没有什么卵用的方法：</p>
+                  <ul>
+                    <li>尝试治疗网络电缆君、调制解调器娘和路由器娘</li>
+                    <li>和无线网络君沟通和好</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Birdjiujiuuu</title>
+<meta name="description" content="Birdjiujiuuu 的个人主页 — 博客、GitHub 与小游戏">
+
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f13" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="my-avatar.webp">
+
+<style>
+  /* ============ 设计变量：浅色（默认） ============ */
+  :root {
+    color-scheme: light dark;
+
+    --bg: #f4f5f7;
+    --glow: radial-gradient(900px 520px at 50% -18%, rgba(59, 110, 245, .16), transparent 70%);
+
+    --surface: #ffffff;
+    --surface-2: #eff1f6;
+
+    --text: #14161a;
+    --text-muted: #626a78;
+
+    --border: #e4e7ed;
+    --border-strong: #ccd3e0;
+
+    --accent: #2f6bf3;
+    --accent-2: #7b5cff;
+
+    /* 壁纸遮罩（控制文字对比度） */
+    --overlay: rgba(244, 245, 247, .32);
+
+    /* 毛玻璃按钮 */
+    --glass: rgba(255, 255, 255, .55);
+    --glass-border: rgba(255, 255, 255, .85);
+    --glass-hover: rgba(255, 255, 255, .76);
+
+    /* 头像投影 */
+    --avatar-shadow: 0 12px 40px rgba(18, 24, 40, .20), 0 0 0 1px rgba(255, 255, 255, .55);
+
+    --shadow-hover: 0 2px 6px rgba(18, 24, 40, .07), 0 14px 32px rgba(18, 24, 40, .10);
+
+    --circle-opacity: .70;
+  }
+
+  /* ============ 深色：跟随系统 ============ */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d0f13;
+      --glow: radial-gradient(900px 520px at 50% -18%, rgba(88, 132, 255, .18), transparent 70%);
+
+      --surface: #171a21;
+      --surface-2: #21252e;
+
+      --text: #eef1f6;
+      --text-muted: #9aa3b2;
+
+      --border: #262b35;
+      --border-strong: #3a414f;
+
+      --accent: #7aa2ff;
+      --accent-2: #a78bfa;
+
+      --overlay: rgba(13, 15, 19, .42);
+
+      --glass: rgba(255, 255, 255, .10);
+      --glass-border: rgba(255, 255, 255, .16);
+      --glass-hover: rgba(255, 255, 255, .17);
+
+      --avatar-shadow: 0 14px 44px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .14);
+
+      --shadow-hover: 0 2px 6px rgba(0, 0, 0, .45), 0 16px 36px rgba(0, 0, 0, .50);
+
+      --circle-opacity: 1;
+    }
+  }
+
+  /* ============ 基础 ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    background-color: var(--bg);
+    background-image: var(--glow);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text);
+    transition: background-color .3s ease, color .3s ease;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  /* ============ 动态背景圆圈 ============ */
+  .bg-circles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: var(--circle-opacity);
+    transition: opacity .3s ease;
+  }
+
+  .bg-circles .circle1,
+  .bg-circles .circle2,
+  .bg-circles .circle3 {
+    position: absolute;
+    border-radius: 100vw;
+  }
+
+  @keyframes circle1Path {
+    0%   { transform: translate(0vw, 0vh);    width: 30vw;  height: 30vw; }
+    100% { transform: translate(0vw, -35vh);  width: 80vw;  height: 80vw; }
+  }
+
+  @keyframes circle2Path {
+    0%   { transform: translate(0vw, 0vh);    width: 20vw;  height: 20vw; }
+    100% { transform: translate(-45vw, -40vh); width: 80vw;  height: 80vw; }
+  }
+
+  @keyframes circle3Path {
+    0%   { transform: translate(0vw, 0vh);    width: 20vw;  height: 20vw; }
+    100% { transform: translate(-55vw, -80vh); width: 120vw; height: 120vw; }
+  }
+
+  @keyframes fadeCircleIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .bg-circles .circle1 {
+    left: 30vw;
+    top: 25vh;
+    animation: circle1Path 12s infinite, fadeCircleIn 1332ms ease-out;
+    animation-direction: alternate;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(12, 119, 255, 0.3) 15.62%,
+      rgba(12, 119, 255, 0) 100%
+    );
+  }
+
+  .bg-circles .circle2 {
+    left: 45vw;
+    top: 30vh;
+    animation: circle2Path 11.5s infinite, fadeCircleIn 1332ms ease-out;
+    animation-direction: alternate;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(0, 56, 255, 0.3) 15.62%,
+      rgba(12, 119, 255, 0) 100%
+    );
+  }
+
+  .bg-circles .circle3 {
+    left: 35vw;
+    top: 30vh;
+    animation: circle3Path 15s infinite, fadeCircleIn 1332ms ease-out;
+    animation-direction: alternate;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(65, 56, 210, 0.5) 15.62%,
+      rgba(65, 56, 210, 0) 100%
+    );
+  }
+
+  /* ============ 壁纸遮罩 ============ */
+  .wallpaper-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--overlay);
+    transition: background-color .3s ease;
+  }
+
+  /* ============ 页面布局 ============ */
+  .page {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: clamp(18px, 4vw, 36px);
+    overflow-y: auto;
+  }
+
+  /* ============ 时间块（左上角） ============ */
+  .time-block {
+    align-self: flex-start;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .clock {
+    font-size: clamp(2.6rem, 8.5vw, 4.2rem);
+    font-weight: 300;
+    letter-spacing: -.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .date {
+    margin-top: 8px;
+    font-size: clamp(.85rem, 2.4vw, 1rem);
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  /* ============ 登录区（垂直居中） ============ */
+  .login-area {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4vw, 32px) 0;
+    min-height: 0;
+  }
+
+  /* ============ 圆框头像（已放大） ============ */
+  .avatar {
+    display: block;
+    width: clamp(132px, 34vw, 176px);
+    height: clamp(132px, 34vw, 176px);
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: var(--avatar-shadow);
+    transition: transform .25s cubic-bezier(.2, .7, .3, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .avatar:hover { transform: scale(1.035); }
+  }
+
+  /* ============ 名字 ============ */
+  .name {
+    margin: clamp(18px, 4.5vw, 26px) 0 0;
+    font-size: clamp(1.45rem, 5.4vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    line-height: 1.2;
+    text-align: center;
+    overflow-wrap: break-word;
+  }
+
+  /* ============ 按钮组 ============ */
+  .action-list {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    max-width: 340px;
+    margin: clamp(24px, 5.5vw, 34px) 0 0;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 16px;
+    font-size: .95rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text);
+    text-decoration: none;
+    text-align: left;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    transition: transform .18s ease, background-color .18s ease,
+                border-color .18s ease, box-shadow .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .btn:active { transform: scale(.985); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+      background: var(--glass-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-1.5px);
+      box-shadow: var(--shadow-hover);
+    }
+    .btn:hover .btn-icon { transform: scale(1.08); }
+  }
+
+  .btn-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: var(--accent);
+    transition: transform .18s ease;
+  }
+
+  .btn-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  /* 不支持 backdrop-filter 时的兜底 */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .btn { background: var(--surface); }
+  }
+
+  /* ============ 入场动画 ============ */
+  @media (prefers-reduced-motion: no-preference) {
+    .time-block { animation: rise .5s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .avatar     { animation: rise .5s .05s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .name       { animation: rise .5s .10s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .action-list .btn:nth-child(1) { animation: rise .5s .15s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .action-list .btn:nth-child(2) { animation: rise .5s .20s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .action-list .btn:nth-child(3) { animation: rise .5s .25s cubic-bezier(.2, .7, .3, 1) backwards; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ============ 小屏微调 ============ */
+  @media (max-width: 380px) {
+    .btn { padding: 12px 14px; font-size: .9rem; }
+    .btn-icon { width: 20px; height: 20px; }
+  }
+
+  /* ============ 减少动态效果 ============ */
+  @media (prefers-reduced-motion: reduce) {
+    .bg-circles .circle1,
+    .bg-circles .circle2,
+    .bg-circles .circle3 {
+      animation: none;
+      opacity: 1;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- 动态背景层 -->
+  <div class="bg-circles" aria-hidden="true">
+    <div class="circle1"></div>
+    <div class="circle2"></div>
+    <div class="circle3"></div>
+  </div>
+  <div class="wallpaper-overlay" aria-hidden="true"></div>
+
+  <div class="page">
+
+    <!-- 左上角时间 / 日期 -->
+    <header class="time-block">
+      <div class="clock" id="clock">--:--</div>
+      <div class="date" id="date"></div>
+    </header>
+
+    <!-- 居中登录区 -->
+    <main class="login-area">
+
+      <!-- 圆框头像：与 index.html 同目录 -->
+      <img class="avatar"
+           src="my-avatar.webp"
+           alt="Birdjiujiuuu 的头像"
+           width="176" height="176"
+           decoding="async">
+
+      <h1 class="name">Birdjiujiuuu</h1>
+
+      <nav class="action-list" aria-label="快捷链接">
+
+        <a class="btn"
+           href="https://github.com/birdjiujiuuu"
+           target="_blank" rel="noopener noreferrer">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="22" height="22" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                       0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                       -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+                       .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+                       -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27
+                       .68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12
+                       .51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+                       0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8
+                       c0-4.42-3.58-8-8-8z"/>
+            </svg>
+          </span>
+          <span class="btn-label">前往我的 GitHub</span>
+        </a>
+
+        <a class="btn"
+           href="https://birdjiujiuuu.me"
+           target="_blank" rel="noopener noreferrer">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                 stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18"/>
+              <path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9Z"/>
+            </svg>
+          </span>
+          <span class="btn-label">前往我的博客</span>
+        </a>
+
+        <a class="btn"
+           href="https://birdjiujiuuu.github.io/games"
+           target="_blank" rel="noopener noreferrer">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                 stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="6.5" width="20" height="11" rx="5.5"/>
+              <path d="M7.5 10.2v3.6M5.7 12h3.6"/>
+              <circle cx="16" cy="11" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="18.2" cy="13.6" r=".9" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="btn-label">玩小游戏</span>
+        </a>
+
+      </nav>
+    </main>
+
+  </div>
+
+  <script>
+    (function () {
+      var weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      var clockEl = document.getElementById('clock');
+      var dateEl = document.getElementById('date');
+
+      // 记录上一次渲染的"分钟键"和"日期键"，只有变化时才写 DOM
+      var lastMinuteKey = '';
+      var lastDateKey = '';
+
+      function pad(n) {
+        return n < 10 ? '0' + n : String(n);
+      }
+
+      function update() {
+        var now = new Date();
+
+        // 时钟：小时 + 分钟 组合成 key，跨小时也能正确触发
+        var minuteKey = now.getHours() + ':' + now.getMinutes();
+        if (minuteKey !== lastMinuteKey) {
+          clockEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+          lastMinuteKey = minuteKey;
+        }
+
+        // 日期：跨天时更新
+        var dateKey = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
+        if (dateKey !== lastDateKey) {
+          dateEl.textContent =
+            (now.getMonth() + 1) + '月' + now.getDate() + '日 ' + weekdays[now.getDay()];
+          lastDateKey = dateKey;
+        }
+      }
+
+      // 立即渲染一次
+      update();
+
+      // 每秒检查一次：到分钟边界时准确刷新，且不会频繁操作 DOM
+      setInterval(update, 1000);
+
+      // 页面从后台恢复 / 窗口重新获得焦点时立即同步，避免显示旧时间
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) update();
+      });
+      window.addEventListener('focus', update);
+    })();
+  </script>
+</body>
+</html>
