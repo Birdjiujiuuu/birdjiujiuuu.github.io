@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Birdjiujiuuu</title>
+<title>Birdjiujiuuu の 主页</title>
 <meta name="description" content="Birdjiujiuuu 的个人主页 — 博客、GitHub 与小游戏">
 
 <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d0f13" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="my-avatar.webp">
 
 <style>
   /* ============ 设计变量：浅色（默认） ============ */
@@ -230,7 +229,7 @@
     min-height: 0;
   }
 
-  /* ============ 圆框头像（已放大） ============ */
+  /* ============ 圆框头像（已放大，无悬停放大） ============ */
   .avatar {
     display: block;
     width: clamp(132px, 34vw, 176px);
@@ -239,11 +238,6 @@
     object-fit: cover;
     background: var(--surface-2);
     box-shadow: var(--avatar-shadow);
-    transition: transform .25s cubic-bezier(.2, .7, .3, 1);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .avatar:hover { transform: scale(1.035); }
   }
 
   /* ============ 名字 ============ */
@@ -326,6 +320,11 @@
     .btn { background: var(--surface); }
   }
 
+  /* ============ 手机模式：隐藏时间日期 ============ */
+  @media (max-width: 640px) {
+    .time-block { display: none; }
+  }
+
   /* ============ 入场动画 ============ */
   @media (prefers-reduced-motion: no-preference) {
     .time-block { animation: rise .5s cubic-bezier(.2, .7, .3, 1) backwards; }
@@ -377,7 +376,7 @@
 
   <div class="page">
 
-    <!-- 左上角时间 / 日期 -->
+    <!-- 左上角时间 / 日期（窄屏隐藏） -->
     <header class="time-block">
       <div class="clock" id="clock">--:--</div>
       <div class="date" id="date"></div>
@@ -458,7 +457,6 @@
       var clockEl = document.getElementById('clock');
       var dateEl = document.getElementById('date');
 
-      // 记录上一次渲染的"分钟键"和"日期键"，只有变化时才写 DOM
       var lastMinuteKey = '';
       var lastDateKey = '';
 
@@ -469,14 +467,12 @@
       function update() {
         var now = new Date();
 
-        // 时钟：小时 + 分钟 组合成 key，跨小时也能正确触发
         var minuteKey = now.getHours() + ':' + now.getMinutes();
         if (minuteKey !== lastMinuteKey) {
           clockEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
           lastMinuteKey = minuteKey;
         }
 
-        // 日期：跨天时更新
         var dateKey = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
         if (dateKey !== lastDateKey) {
           dateEl.textContent =
@@ -485,13 +481,9 @@
         }
       }
 
-      // 立即渲染一次
       update();
-
-      // 每秒检查一次：到分钟边界时准确刷新，且不会频繁操作 DOM
       setInterval(update, 1000);
 
-      // 页面从后台恢复 / 窗口重新获得焦点时立即同步，避免显示旧时间
       document.addEventListener('visibilitychange', function () {
         if (!document.hidden) update();
       });
