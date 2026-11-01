@@ -229,7 +229,7 @@
     min-height: 0;
   }
 
-  /* ============ 圆框头像（已放大，无悬停放大） ============ */
+  /* ============ 圆框头像 ============ */
   .avatar {
     display: block;
     width: clamp(132px, 34vw, 176px);
@@ -253,6 +253,7 @@
 
   /* ============ 按钮组 ============ */
   .action-list {
+    position: relative;              /* 供加载环绝对定位 */
     display: grid;
     gap: 10px;
     width: 100%;
@@ -278,7 +279,8 @@
     backdrop-filter: blur(20px) saturate(1.6);
     -webkit-backdrop-filter: blur(20px) saturate(1.6);
     transition: transform .18s ease, background-color .18s ease,
-                border-color .18s ease, box-shadow .18s ease;
+                border-color .18s ease, box-shadow .18s ease,
+                opacity .28s ease, visibility 0s linear 0s;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -320,6 +322,73 @@
     .btn { background: var(--surface); }
   }
 
+  /* ============ WinUI3 风格 ProgressRing + 欢迎 ============ */
+  .win-loader {
+    position: absolute;
+    inset: 0;                     /* 铺满按钮区域，用于居中 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;                    /* 环与“欢迎”之间的间距 */
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .28s ease, visibility 0s linear .28s;
+  }
+
+  .action-list.is-loading .win-loader {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .28s ease, visibility 0s linear 0s;
+  }
+
+  /* 加载期间：按钮隐藏但保留占位（环正好落在按钮堆中央） */
+  .action-list.is-loading .btn {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .28s ease, visibility 0s linear 0s;
+  }
+
+  .win-ring {
+    flex: none;
+    display: block;
+    width: 52px;
+    height: 52px;
+    color: var(--accent);
+    transform-origin: center;
+    animation: winRingRotate 2s linear infinite;
+  }
+
+  /* 弧线本身：长度伸缩 + 沿环前进，形成线在转圈的观感 */
+  .win-ring circle {
+    animation: winRingDash 2s ease-in-out infinite;
+  }
+
+  .win-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    color: var(--text);
+    white-space: nowrap;
+    animation: winTextIn .45s cubic-bezier(.2, .7, .3, 1) backwards;
+  }
+
+  @keyframes winRingRotate {
+    to { transform: rotate(360deg); }
+  }
+
+  /* r = 19，周长约 119.38 */
+  @keyframes winRingDash {
+    0%   { stroke-dasharray: 1 200;  stroke-dashoffset: 0; }
+    50%  { stroke-dasharray: 88 200; stroke-dashoffset: -34; }
+    100% { stroke-dasharray: 1 200;  stroke-dashoffset: -119; }
+  }
+
+  @keyframes winTextIn {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
   /* ============ 手机模式：隐藏时间日期 ============ */
   @media (max-width: 640px) {
     .time-block { display: none; }
@@ -330,9 +399,11 @@
     .time-block { animation: rise .5s cubic-bezier(.2, .7, .3, 1) backwards; }
     .avatar     { animation: rise .5s .05s cubic-bezier(.2, .7, .3, 1) backwards; }
     .name       { animation: rise .5s .10s cubic-bezier(.2, .7, .3, 1) backwards; }
-    .action-list .btn:nth-child(1) { animation: rise .5s .15s cubic-bezier(.2, .7, .3, 1) backwards; }
-    .action-list .btn:nth-child(2) { animation: rise .5s .20s cubic-bezier(.2, .7, .3, 1) backwards; }
-    .action-list .btn:nth-child(3) { animation: rise .5s .25s cubic-bezier(.2, .7, .3, 1) backwards; }
+
+    /* 加载结束后，按钮重新播放入场动画 */
+    .action-list:not(.is-loading) .btn:nth-of-type(1) { animation: rise .5s .05s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .action-list:not(.is-loading) .btn:nth-of-type(2) { animation: rise .5s .10s cubic-bezier(.2, .7, .3, 1) backwards; }
+    .action-list:not(.is-loading) .btn:nth-of-type(3) { animation: rise .5s .15s cubic-bezier(.2, .7, .3, 1) backwards; }
   }
 
   @keyframes rise {
@@ -344,6 +415,8 @@
   @media (max-width: 380px) {
     .btn { padding: 12px 14px; font-size: .9rem; }
     .btn-icon { width: 20px; height: 20px; }
+    .win-ring { width: 44px; height: 44px; }
+    .win-text { font-size: 1.3rem; letter-spacing: .12em; }
   }
 
   /* ============ 减少动态效果 ============ */
@@ -394,7 +467,19 @@
 
       <h1 class="name">Birdjiujiuuu</h1>
 
-      <nav class="action-list" aria-label="快捷链接">
+      <!-- 初始带 is-loading，脚本 2s 后移除 -->
+      <nav class="action-list is-loading" id="actionList" aria-label="快捷链接" aria-busy="true">
+
+        <!-- WinUI3 ProgressRing 与欢迎文字 -->
+        <div class="win-loader" aria-hidden="true">
+          <svg class="win-ring" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="19"
+                    stroke="currentColor"
+                    stroke-width="4.4"
+                    stroke-linecap="round"/>
+          </svg>
+          <span class="win-text">欢迎</span>
+        </div>
 
         <a class="btn"
            href="https://github.com/birdjiujiuuu"
@@ -451,7 +536,16 @@
 
   </div>
 
+  <!-- 无 JS 兜底：直接显示按钮，不显示加载环 -->
+  <noscript>
+    <style>
+      .action-list.is-loading .btn { opacity: 1; visibility: visible; }
+      .action-list.is-loading .win-loader { display: none; }
+    </style>
+  </noscript>
+
   <script>
+    /* ============ 时间 / 日期 ============ */
     (function () {
       var weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
       var clockEl = document.getElementById('clock');
@@ -488,6 +582,38 @@
         if (!document.hidden) update();
       });
       window.addEventListener('focus', update);
+    })();
+
+    /* ============ 加载 2.5 秒后显示按钮 ============ */
+    (function () {
+      var list = document.getElementById('actionList');
+      if (!list) return;
+
+      var loader = list.querySelector('.win-loader');
+      var LOADING_MS = 2500;
+
+      function reveal() {
+        list.classList.remove('is-loading');
+        list.removeAttribute('aria-busy');
+
+        // 加载环与“欢迎”淡出后从 DOM 移除，避免残留
+        if (loader) {
+          window.setTimeout(function () {
+            if (loader.parentNode) loader.parentNode.removeChild(loader);
+          }, 400);
+        }
+      }
+
+      // 用户偏好减少动效时，跳过加载，直接显示按钮
+      var reduceMotion = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduceMotion) {
+        reveal();
+        return;
+      }
+
+      window.setTimeout(reveal, LOADING_MS);
     })();
   </script>
 </body>
